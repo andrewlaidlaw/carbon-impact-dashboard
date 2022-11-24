@@ -1,0 +1,271 @@
+[
+    {
+        "id": "04d3574919996fe6",
+        "type": "inject",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Every 30 minutes",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1800",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 580,
+        "wires": [
+            [
+                "f4a2491f2e5911d9",
+                "08d9a30abdf22457"
+            ]
+        ]
+    },
+    {
+        "id": "f4a2491f2e5911d9",
+        "type": "http request",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Get electricity generation",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.carbonintensity.org.uk/generation",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 580,
+        "wires": [
+            [
+                "ed52d7903f80d7ef"
+            ]
+        ]
+    },
+    {
+        "id": "15bffa8db2a8a0b5",
+        "type": "ui_chart",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Generation % chart",
+        "group": "54a6a1a4d5f4c794",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "label": "Generation mix %",
+        "chartType": "bar",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Loading...",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "100",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 890,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ed52d7903f80d7ef",
+        "type": "function",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Convert to chart format",
+        "func": "//msg.payload = [{\n//    \"series\": [\"X\", \"Y\", \"Z\"],\n//    \"data\": [[5, 6, 9, 10], [3, 8, 5, 10], [6, 7, 2, 10]],\n//    \"labels\": [\"Jan\", \"Feb\", \"Mar\", \"Apr\"]\n//}]\n\nlet series = [];\nlet data = [];\nlet labels = [];\n\nmsg.payload.data.generationmix.forEach(myfunction);\n\nfunction myfunction(item) {\n    labels.push(item.fuel);\n    data.push(item.perc);\n}\n\nmsg.payload=[{\n    \"series\" : series,\n    \"data\" : data,\n    \"labels\" : labels\n}]\n\n//msg.payload.push('series: [' + series + ']');\n//msg.payload.push('data: [' + data + ']');\n//msg.payload.push('labels: [' + labels + ']');\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 580,
+        "wires": [
+            [
+                "15bffa8db2a8a0b5"
+            ]
+        ]
+    },
+    {
+        "id": "08d9a30abdf22457",
+        "type": "http request",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Get carbon intensity score",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.carbonintensity.org.uk/intensity",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 640,
+        "wires": [
+            [
+                "c6ea98c550c8c79e",
+                "4e48cdf144d7d7b5"
+            ]
+        ]
+    },
+    {
+        "id": "c6ea98c550c8c79e",
+        "type": "change",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Pull out forecast",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.data[0].intensity.forecast",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 640,
+        "wires": [
+            [
+                "94e651f00e402f45"
+            ]
+        ]
+    },
+    {
+        "id": "94e651f00e402f45",
+        "type": "ui_gauge",
+        "z": "f4a0cb11b396cc6d",
+        "name": "",
+        "group": "54a6a1a4d5f4c794",
+        "order": 2,
+        "width": "12",
+        "height": "6",
+        "gtype": "gage",
+        "title": "Carbon intensity",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "400",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "100",
+        "seg2": "200",
+        "className": "",
+        "x": 880,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "4e48cdf144d7d7b5",
+        "type": "change",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Pull out intensity index",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.data[0].intensity.index",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 700,
+        "wires": [
+            [
+                "a5940e97569f78c6"
+            ]
+        ]
+    },
+    {
+        "id": "a5940e97569f78c6",
+        "type": "ui_text",
+        "z": "f4a0cb11b396cc6d",
+        "group": "54a6a1a4d5f4c794",
+        "order": 1,
+        "width": "12",
+        "height": "1",
+        "name": "Intensity index",
+        "label": "Intensity index:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 880,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "1167c383cdc98e99",
+        "type": "comment",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Carbon intensity dashboard",
+        "info": "",
+        "x": 140,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "54a6a1a4d5f4c794",
+        "type": "ui_group",
+        "name": "Carbon Impact",
+        "tab": "f35e5a8b17c21ed3",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f35e5a8b17c21ed3",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": true
+    }
+]

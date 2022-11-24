@@ -1,0 +1,22 @@
+{
+    "name": "carbon-impact-dashboard",
+    "version": "1.0.1",
+    "description": "Node.js application providing a dashboard to see the carbon impact of electricity generation for the UK as a whole",
+    "dependencies": {
+      "node-red": "^3.0.2",
+      "node-red-dashboard" : "^3.2.0"
+    },
+    "scripts": {
+        "start": "node --max-old-space-size=384 node_modules/node-red/red.js dashboard-flow.json --port 8080"
+    },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/andrewlaidlaw/carbon-impact-dashboard.git"
+    },
+    "author": "Andrew Laidlaw <andrew.laidlaw@uk.ibm.com>",
+    "bugs": {
+      "url": "https://github.com/andrewlaidlaw/carbon-impact-dashboard/issues"
+    },
+    "homepage": "https://github.com/andrewlaidlaw/carbon-impact-dashboard"
+  }
+  
