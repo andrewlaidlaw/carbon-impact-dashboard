@@ -25,7 +25,8 @@
         "wires": [
             [
                 "f4a2491f2e5911d9",
-                "08d9a30abdf22457"
+                "08d9a30abdf22457",
+                "6fac4ece1b08a28d"
             ]
         ]
     },
@@ -49,7 +50,8 @@
         "y": 580,
         "wires": [
             [
-                "ed52d7903f80d7ef"
+                "ed52d7903f80d7ef",
+                "4f098bacbb1cef6b"
             ]
         ]
     },
@@ -176,7 +178,7 @@
         "group": "54a6a1a4d5f4c794",
         "order": 2,
         "width": "12",
-        "height": "6",
+        "height": "7",
         "gtype": "gage",
         "title": "Carbon intensity",
         "label": "",
@@ -248,6 +250,178 @@
         "x": 140,
         "y": 520,
         "wires": []
+    },
+    {
+        "id": "4f098bacbb1cef6b",
+        "type": "function",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Calculate renewables and carbon free",
+        "func": "msg.payload.renewables = 0;\nmsg.payload.carbonfree = 0;\nmsg.payload.data.generationmix.forEach(function(element) {\n    if (element.fuel == \"hydro\" || element.fuel == \"solar\" || element.fuel == \"wind\") {\n        msg.payload.renewables = msg.payload.renewables + element.perc;\n        msg.payload.carbonfree = msg.payload.carbonfree + element.perc;\n    };\n    if (element.fuel == \"nuclear\") {\n        msg.payload.carbonfree = msg.payload.carbonfree + element.perc;\n    }\n});\nmsg.payload.renewables = parseFloat(msg.payload.renewables).toFixed(1);\nmsg.payload.carbonfree = parseFloat(msg.payload.carbonfree).toFixed(1);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 520,
+        "wires": [
+            [
+                "e85f22c76f79dd68",
+                "f6b344e774e74bc3"
+            ]
+        ]
+    },
+    {
+        "id": "697f13fae1a3486b",
+        "type": "ui_gauge",
+        "z": "f4a0cb11b396cc6d",
+        "name": "",
+        "group": "54a6a1a4d5f4c794",
+        "order": 3,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Renewables",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#e6e600",
+            "#39b300"
+        ],
+        "seg1": "30",
+        "seg2": "55",
+        "className": "",
+        "x": 1130,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "2aaed87891c89cb3",
+        "type": "ui_gauge",
+        "z": "f4a0cb11b396cc6d",
+        "name": "",
+        "group": "54a6a1a4d5f4c794",
+        "order": 3,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Low Carbon",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#e6e600",
+            "#39b300"
+        ],
+        "seg1": "30",
+        "seg2": "55",
+        "className": "",
+        "x": 1130,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "e85f22c76f79dd68",
+        "type": "change",
+        "z": "f4a0cb11b396cc6d",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.renewables",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 460,
+        "wires": [
+            [
+                "697f13fae1a3486b"
+            ]
+        ]
+    },
+    {
+        "id": "f6b344e774e74bc3",
+        "type": "change",
+        "z": "f4a0cb11b396cc6d",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.carbonfree",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 520,
+        "wires": [
+            [
+                "2aaed87891c89cb3"
+            ]
+        ]
+    },
+    {
+        "id": "5d47dd41a91bf916",
+        "type": "ui_text",
+        "z": "f4a0cb11b396cc6d",
+        "group": "54a6a1a4d5f4c794",
+        "order": 5,
+        "width": "12",
+        "height": "2",
+        "name": "",
+        "label": "Notes:",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 430,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "6fac4ece1b08a28d",
+        "type": "change",
+        "z": "f4a0cb11b396cc6d",
+        "name": "Set notes",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Renewables figure includes the percentage of the generation mix coming from Solar, Wind, and Hydro sources. The Low Carbon figure also includes the contribution of Nuclear power generation.",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 300,
+        "y": 700,
+        "wires": [
+            [
+                "5d47dd41a91bf916"
+            ]
+        ]
     },
     {
         "id": "54a6a1a4d5f4c794",
