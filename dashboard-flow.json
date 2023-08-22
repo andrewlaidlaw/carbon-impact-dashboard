@@ -1,8 +1,153 @@
 [
     {
+        "id": "7d0898c08fd4ff57",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f35e5a8b17c21ed3",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "54a6a1a4d5f4c794",
+        "type": "ui_group",
+        "name": "Carbon Impact",
+        "tab": "f35e5a8b17c21ed3",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "f6fb0f26a357ef30",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "e6a97f7395fd0a65",
+        "type": "ui_tab",
+        "name": "Power Consumption",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "26921755a6e7cec1",
+        "type": "ui_group",
+        "name": "Consumption",
+        "tab": "e6a97f7395fd0a65",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
         "id": "04d3574919996fe6",
         "type": "inject",
-        "z": "f4a0cb11b396cc6d",
+        "z": "7d0898c08fd4ff57",
         "name": "Every 30 minutes",
         "props": [
             {
@@ -21,7 +166,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 130,
-        "y": 580,
+        "y": 200,
         "wires": [
             [
                 "f4a2491f2e5911d9",
@@ -33,7 +178,7 @@
     {
         "id": "f4a2491f2e5911d9",
         "type": "http request",
-        "z": "f4a0cb11b396cc6d",
+        "z": "7d0898c08fd4ff57",
         "name": "Get electricity generation",
         "method": "GET",
         "ret": "obj",
@@ -47,7 +192,7 @@
         "senderr": false,
         "headers": [],
         "x": 350,
-        "y": 580,
+        "y": 200,
         "wires": [
             [
                 "ed52d7903f80d7ef",
@@ -56,9 +201,333 @@
         ]
     },
     {
+        "id": "ed52d7903f80d7ef",
+        "type": "function",
+        "z": "7d0898c08fd4ff57",
+        "name": "Convert to chart format",
+        "func": "//msg.payload = [{\n//    \"series\": [\"X\", \"Y\", \"Z\"],\n//    \"data\": [[5, 6, 9, 10], [3, 8, 5, 10], [6, 7, 2, 10]],\n//    \"labels\": [\"Jan\", \"Feb\", \"Mar\", \"Apr\"]\n//}]\n\nlet series = [];\nlet data = [];\nlet labels = [];\n\nmsg.payload.data.generationmix.forEach(myfunction);\n\nfunction myfunction(item) {\n    labels.push(item.fuel);\n    data.push(item.perc);\n}\n\nmsg.payload=[{\n    \"series\" : series,\n    \"data\" : data,\n    \"labels\" : labels\n}]\n\n//msg.payload.push('series: [' + series + ']');\n//msg.payload.push('data: [' + data + ']');\n//msg.payload.push('labels: [' + labels + ']');\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 200,
+        "wires": [
+            [
+                "15bffa8db2a8a0b5"
+            ]
+        ]
+    },
+    {
+        "id": "08d9a30abdf22457",
+        "type": "http request",
+        "z": "7d0898c08fd4ff57",
+        "name": "Get carbon intensity score",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.carbonintensity.org.uk/intensity",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 350,
+        "y": 260,
+        "wires": [
+            [
+                "c6ea98c550c8c79e",
+                "4e48cdf144d7d7b5"
+            ]
+        ]
+    },
+    {
+        "id": "c6ea98c550c8c79e",
+        "type": "change",
+        "z": "7d0898c08fd4ff57",
+        "name": "Pull out forecast",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.data[0].intensity.forecast",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 260,
+        "wires": [
+            [
+                "94e651f00e402f45"
+            ]
+        ]
+    },
+    {
+        "id": "4e48cdf144d7d7b5",
+        "type": "change",
+        "z": "7d0898c08fd4ff57",
+        "name": "Pull out intensity index",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.data[0].intensity.index",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 640,
+        "y": 320,
+        "wires": [
+            [
+                "a5940e97569f78c6"
+            ]
+        ]
+    },
+    {
+        "id": "1167c383cdc98e99",
+        "type": "comment",
+        "z": "7d0898c08fd4ff57",
+        "name": "Carbon intensity dashboard",
+        "info": "",
+        "x": 140,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "4f098bacbb1cef6b",
+        "type": "function",
+        "z": "7d0898c08fd4ff57",
+        "name": "Calculate renewables and carbon free",
+        "func": "msg.payload.renewables = 0;\nmsg.payload.carbonfree = 0;\nmsg.payload.data.generationmix.forEach(function(element) {\n    if (element.fuel == \"hydro\" || element.fuel == \"solar\" || element.fuel == \"wind\") {\n        msg.payload.renewables = msg.payload.renewables + element.perc;\n        msg.payload.carbonfree = msg.payload.carbonfree + element.perc;\n    };\n    if (element.fuel == \"nuclear\") {\n        msg.payload.carbonfree = msg.payload.carbonfree + element.perc;\n    }\n});\nmsg.payload.renewables = parseFloat(msg.payload.renewables).toFixed(1);\nmsg.payload.carbonfree = parseFloat(msg.payload.carbonfree).toFixed(1);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 140,
+        "wires": [
+            [
+                "e85f22c76f79dd68",
+                "f6b344e774e74bc3"
+            ]
+        ]
+    },
+    {
+        "id": "e85f22c76f79dd68",
+        "type": "change",
+        "z": "7d0898c08fd4ff57",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.renewables",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 80,
+        "wires": [
+            [
+                "697f13fae1a3486b"
+            ]
+        ]
+    },
+    {
+        "id": "f6b344e774e74bc3",
+        "type": "change",
+        "z": "7d0898c08fd4ff57",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.carbonfree",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 960,
+        "y": 140,
+        "wires": [
+            [
+                "2aaed87891c89cb3"
+            ]
+        ]
+    },
+    {
+        "id": "6fac4ece1b08a28d",
+        "type": "change",
+        "z": "7d0898c08fd4ff57",
+        "name": "Set notes",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Renewables figure includes the percentage of the generation mix coming from Solar, Wind, and Hydro sources. The Low Carbon figure also includes the contribution of Nuclear power generation.",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 300,
+        "y": 320,
+        "wires": [
+            [
+                "5d47dd41a91bf916"
+            ]
+        ]
+    },
+    {
+        "id": "a5940e97569f78c6",
+        "type": "ui_text",
+        "z": "7d0898c08fd4ff57",
+        "group": "54a6a1a4d5f4c794",
+        "order": 1,
+        "width": "12",
+        "height": "1",
+        "name": "Intensity index",
+        "label": "Intensity index:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 880,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "5d47dd41a91bf916",
+        "type": "ui_text",
+        "z": "7d0898c08fd4ff57",
+        "group": "54a6a1a4d5f4c794",
+        "order": 5,
+        "width": "12",
+        "height": "2",
+        "name": "",
+        "label": "Notes:",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 430,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "94e651f00e402f45",
+        "type": "ui_gauge",
+        "z": "7d0898c08fd4ff57",
+        "name": "",
+        "group": "54a6a1a4d5f4c794",
+        "order": 2,
+        "width": "12",
+        "height": "7",
+        "gtype": "gage",
+        "title": "Carbon intensity",
+        "label": "",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "400",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "100",
+        "seg2": "200",
+        "className": "",
+        "x": 880,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "697f13fae1a3486b",
+        "type": "ui_gauge",
+        "z": "7d0898c08fd4ff57",
+        "name": "",
+        "group": "54a6a1a4d5f4c794",
+        "order": 3,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Renewables",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#e6e600",
+            "#39b300"
+        ],
+        "seg1": "30",
+        "seg2": "55",
+        "className": "",
+        "x": 1130,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "2aaed87891c89cb3",
+        "type": "ui_gauge",
+        "z": "7d0898c08fd4ff57",
+        "name": "",
+        "group": "54a6a1a4d5f4c794",
+        "order": 3,
+        "width": "6",
+        "height": "4",
+        "gtype": "gage",
+        "title": "Low Carbon",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#ca3838",
+            "#e6e600",
+            "#39b300"
+        ],
+        "seg1": "30",
+        "seg2": "55",
+        "className": "",
+        "x": 1130,
+        "y": 140,
+        "wires": []
+    },
+    {
         "id": "15bffa8db2a8a0b5",
         "type": "ui_chart",
-        "z": "f4a0cb11b396cc6d",
+        "z": "7d0898c08fd4ff57",
         "name": "Generation % chart",
         "group": "54a6a1a4d5f4c794",
         "order": 3,
@@ -94,352 +563,228 @@
         "useDifferentColor": false,
         "className": "",
         "x": 890,
-        "y": 580,
+        "y": 200,
         "wires": [
             []
         ]
     },
     {
-        "id": "ed52d7903f80d7ef",
-        "type": "function",
-        "z": "f4a0cb11b396cc6d",
-        "name": "Convert to chart format",
-        "func": "//msg.payload = [{\n//    \"series\": [\"X\", \"Y\", \"Z\"],\n//    \"data\": [[5, 6, 9, 10], [3, 8, 5, 10], [6, 7, 2, 10]],\n//    \"labels\": [\"Jan\", \"Feb\", \"Mar\", \"Apr\"]\n//}]\n\nlet series = [];\nlet data = [];\nlet labels = [];\n\nmsg.payload.data.generationmix.forEach(myfunction);\n\nfunction myfunction(item) {\n    labels.push(item.fuel);\n    data.push(item.perc);\n}\n\nmsg.payload=[{\n    \"series\" : series,\n    \"data\" : data,\n    \"labels\" : labels\n}]\n\n//msg.payload.push('series: [' + series + ']');\n//msg.payload.push('data: [' + data + ']');\n//msg.payload.push('labels: [' + labels + ']');\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 640,
+        "id": "d94d16a3a22c5099",
+        "type": "inject",
+        "z": "7d0898c08fd4ff57",
+        "name": "Inject data",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
         "y": 580,
         "wires": [
             [
-                "15bffa8db2a8a0b5"
+                "24869ae5959464c6"
             ]
         ]
     },
     {
-        "id": "08d9a30abdf22457",
-        "type": "http request",
-        "z": "f4a0cb11b396cc6d",
-        "name": "Get carbon intensity score",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "https://api.carbonintensity.org.uk/intensity",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 350,
-        "y": 640,
-        "wires": [
-            [
-                "c6ea98c550c8c79e",
-                "4e48cdf144d7d7b5"
-            ]
-        ]
-    },
-    {
-        "id": "c6ea98c550c8c79e",
-        "type": "change",
-        "z": "f4a0cb11b396cc6d",
-        "name": "Pull out forecast",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload.data[0].intensity.forecast",
-                "tot": "msg"
-            }
-        ],
+        "id": "f2853b9ac49a7dc1",
+        "type": "json",
+        "z": "7d0898c08fd4ff57",
+        "name": "Convert to object",
+        "property": "payload",
         "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 640,
-        "y": 640,
+        "pretty": false,
+        "x": 510,
+        "y": 580,
         "wires": [
             [
-                "94e651f00e402f45"
+                "2891a055893e301e",
+                "63c860d5ae05e0ca"
             ]
         ]
     },
     {
-        "id": "94e651f00e402f45",
-        "type": "ui_gauge",
-        "z": "f4a0cb11b396cc6d",
+        "id": "24869ae5959464c6",
+        "type": "template",
+        "z": "7d0898c08fd4ff57",
+        "name": "Example JSON",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "[\n    {\n        \"time\": \"2023-01-03T13:31:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:32:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:32:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:33:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T13:33:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:34:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:34:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:35:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:35:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:36:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:36:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:37:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:37:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:38:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:38:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:39:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T13:39:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:40:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:40:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:41:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:41:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T13:42:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:42:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:43:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:43:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:44:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:44:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T13:45:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:45:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:46:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:46:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:47:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:47:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:48:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:48:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:49:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:49:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 36.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:50:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:50:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:51:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:51:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:52:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:52:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:53:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:53:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:54:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:54:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 36.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:55:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 36.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:55:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:56:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:56:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:57:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:57:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:58:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:58:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:59:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 36.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T13:59:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:00:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:00:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 36.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:01:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:01:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:02:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:02:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:03:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:03:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:04:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:04:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:05:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:05:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:06:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:06:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:07:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:07:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:08:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:08:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:09:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:09:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:10:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:10:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:11:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 36.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:11:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:12:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:12:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:13:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:13:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 36.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:14:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:14:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:15:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:15:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:16:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:16:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:17:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:17:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:18:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:18:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T14:19:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:19:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:20:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:20:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:21:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:21:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:22:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:22:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:23:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:23:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:24:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:24:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:25:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:25:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:26:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:26:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:27:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:27:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:28:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:28:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:29:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:29:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:30:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:30:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:31:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:31:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:32:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:32:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:33:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:33:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:34:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:34:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:35:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:35:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:36:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:36:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:37:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:37:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:38:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:38:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:39:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:39:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:40:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:40:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:41:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:41:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:42:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:42:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:43:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:43:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:44:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:44:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:45:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:45:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:46:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:46:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:47:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:47:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:48:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:48:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:49:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:49:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:50:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:50:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 36.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:51:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:51:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:52:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:52:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:53:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:53:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:54:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:54:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:55:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:55:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:56:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:56:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:57:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:57:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:58:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:58:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T14:59:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T14:59:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:00:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:00:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:01:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:01:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:02:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:02:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:03:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:03:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T15:04:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:04:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:05:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:05:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:06:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:06:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T15:07:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:07:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:08:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:08:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:09:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:09:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:10:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:10:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:11:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:11:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:12:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:12:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:13:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:13:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:14:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:14:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:15:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T15:15:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:16:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:16:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:17:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:17:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:18:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:18:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:19:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:19:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:20:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:20:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 37.0\n    },\n    {\n        \"time\": \"2023-01-03T15:21:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:21:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:22:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:22:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:23:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:23:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:24:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:24:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:25:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:25:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:26:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:26:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:27:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 33.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:27:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:28:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:28:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:29:00\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:29:30\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:30:00\",\n        \"watts\": 345.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    },\n    {\n        \"time\": \"2023-01-03T15:30:30\",\n        \"watts\": 344.0,\n        \"inlet\": 22.0,\n        \"mb0\": 31.0,\n        \"mb1\": 23.0,\n        \"mb2\": 32.0,\n        \"cpu0\": 37.0,\n        \"cpu1\": 36.0\n    }\n]",
+        "output": "str",
+        "x": 300,
+        "y": 580,
+        "wires": [
+            [
+                "f2853b9ac49a7dc1"
+            ]
+        ]
+    },
+    {
+        "id": "c4ab731e9cc29dfb",
+        "type": "debug",
+        "z": "7d0898c08fd4ff57",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "d3355cb019b7a7ff",
+        "type": "ui_chart",
+        "z": "7d0898c08fd4ff57",
         "name": "",
-        "group": "54a6a1a4d5f4c794",
-        "order": 2,
-        "width": "12",
-        "height": "7",
-        "gtype": "gage",
-        "title": "Carbon intensity",
-        "label": "",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "400",
+        "group": "26921755a6e7cec1",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Power usage",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "1000",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
         "colors": [
-            "#00b500",
-            "#e6e600",
-            "#ca3838"
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
         ],
-        "seg1": "100",
-        "seg2": "200",
+        "outputs": 1,
+        "useDifferentColor": false,
         "className": "",
-        "x": 880,
-        "y": 640,
-        "wires": []
-    },
-    {
-        "id": "4e48cdf144d7d7b5",
-        "type": "change",
-        "z": "f4a0cb11b396cc6d",
-        "name": "Pull out intensity index",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload.data[0].intensity.index",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 640,
-        "y": 700,
+        "x": 1070,
+        "y": 560,
         "wires": [
-            [
-                "a5940e97569f78c6"
-            ]
+            []
         ]
     },
     {
-        "id": "a5940e97569f78c6",
-        "type": "ui_text",
-        "z": "f4a0cb11b396cc6d",
-        "group": "54a6a1a4d5f4c794",
-        "order": 1,
-        "width": "12",
-        "height": "1",
-        "name": "Intensity index",
-        "label": "Intensity index:",
-        "format": "{{msg.payload}}",
-        "layout": "row-spread",
-        "className": "",
-        "x": 880,
-        "y": 700,
-        "wires": []
-    },
-    {
-        "id": "1167c383cdc98e99",
-        "type": "comment",
-        "z": "f4a0cb11b396cc6d",
-        "name": "Carbon intensity dashboard",
-        "info": "",
-        "x": 140,
-        "y": 520,
-        "wires": []
-    },
-    {
-        "id": "4f098bacbb1cef6b",
+        "id": "2891a055893e301e",
         "type": "function",
-        "z": "f4a0cb11b396cc6d",
-        "name": "Calculate renewables and carbon free",
-        "func": "msg.payload.renewables = 0;\nmsg.payload.carbonfree = 0;\nmsg.payload.data.generationmix.forEach(function(element) {\n    if (element.fuel == \"hydro\" || element.fuel == \"solar\" || element.fuel == \"wind\") {\n        msg.payload.renewables = msg.payload.renewables + element.perc;\n        msg.payload.carbonfree = msg.payload.carbonfree + element.perc;\n    };\n    if (element.fuel == \"nuclear\") {\n        msg.payload.carbonfree = msg.payload.carbonfree + element.perc;\n    }\n});\nmsg.payload.renewables = parseFloat(msg.payload.renewables).toFixed(1);\nmsg.payload.carbonfree = parseFloat(msg.payload.carbonfree).toFixed(1);\nreturn msg;",
+        "z": "7d0898c08fd4ff57",
+        "name": "Prepare power consumption data",
+        "func": "let series = [\"Watts\"];\nlet powerdata = [];\nlet tempdata = [];\nlet labels = [\"Power (Watts)\"];\n\nmsg.payload.forEach(myfunction);\n\nfunction myfunction(item) {\n    let msecs = Date.parse(item.time);\n    let powerentry = {};\n    powerentry.x = msecs;\n    powerentry.y = item.watts;\n    powerdata.push(powerentry);\n}\n\nmsg.payload = [{\n    \"series\": series,\n    \"data\": [powerdata],\n    \"labels\": labels\n}]\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 690,
-        "y": 520,
+        "x": 780,
+        "y": 580,
         "wires": [
             [
-                "e85f22c76f79dd68",
-                "f6b344e774e74bc3"
+                "c4ab731e9cc29dfb",
+                "d3355cb019b7a7ff"
             ]
         ]
     },
     {
-        "id": "697f13fae1a3486b",
-        "type": "ui_gauge",
-        "z": "f4a0cb11b396cc6d",
+        "id": "63c860d5ae05e0ca",
+        "type": "function",
+        "z": "7d0898c08fd4ff57",
+        "name": "Prepare temperature data",
+        "func": "let series = [\"MBTemp\", \"InletTemp\", \"CPUTemp\"];\nlet mb1data = [];\nlet tempdata = [];\nlet cpudata = [];\nlet labels = [\"Motherboard Temperature (C)\", \"Inlet Temperature (C)\", \"CPU Temperature (C)\"];\n\nmsg.payload.forEach(myfunction);\n\nfunction myfunction(item) {\n    let msecs = Date.parse(item.time);\n    let mb1entry = {};\n    let tempentry = {};\n    let cpuentry = {};\n    mb1entry.x = msecs;\n    mb1entry.y = item.mb1;\n    tempentry.x = msecs;\n    tempentry.y = item.inlet;\n    cpuentry.x = msecs;\n    cpuentry.y = item.cpu0;\n    mb1data.push(mb1entry);\n    tempdata.push(tempentry);\n    cpudata.push(cpuentry);\n}\n\nmsg.payload = [{\n    \"series\": series,\n    \"data\": [mb1data, tempdata, cpudata],\n    \"labels\": labels\n}]\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 620,
+        "wires": [
+            [
+                "c4ab731e9cc29dfb",
+                "1dc3ce8640be43d7"
+            ]
+        ]
+    },
+    {
+        "id": "1dc3ce8640be43d7",
+        "type": "ui_chart",
+        "z": "7d0898c08fd4ff57",
         "name": "",
-        "group": "54a6a1a4d5f4c794",
-        "order": 3,
-        "width": "6",
-        "height": "4",
-        "gtype": "gage",
-        "title": "Renewables",
-        "label": "%",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "100",
+        "group": "26921755a6e7cec1",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "label": "Temperatures",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "Waiting",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "1000",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
         "colors": [
-            "#ca3838",
-            "#e6e600",
-            "#39b300"
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
         ],
-        "seg1": "30",
-        "seg2": "55",
+        "outputs": 1,
+        "useDifferentColor": false,
         "className": "",
-        "x": 1130,
-        "y": 460,
-        "wires": []
+        "x": 1080,
+        "y": 640,
+        "wires": [
+            []
+        ]
     },
     {
-        "id": "2aaed87891c89cb3",
-        "type": "ui_gauge",
-        "z": "f4a0cb11b396cc6d",
-        "name": "",
-        "group": "54a6a1a4d5f4c794",
-        "order": 3,
-        "width": "6",
-        "height": "4",
-        "gtype": "gage",
-        "title": "Low Carbon",
-        "label": "%",
-        "format": "{{value}}",
-        "min": 0,
-        "max": "100",
-        "colors": [
-            "#ca3838",
-            "#e6e600",
-            "#39b300"
-        ],
-        "seg1": "30",
-        "seg2": "55",
-        "className": "",
-        "x": 1130,
+        "id": "6f39b92b7684c852",
+        "type": "comment",
+        "z": "7d0898c08fd4ff57",
+        "name": "Server environmentals dashboard",
+        "info": "",
+        "x": 150,
         "y": 520,
         "wires": []
-    },
-    {
-        "id": "e85f22c76f79dd68",
-        "type": "change",
-        "z": "f4a0cb11b396cc6d",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload.renewables",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 960,
-        "y": 460,
-        "wires": [
-            [
-                "697f13fae1a3486b"
-            ]
-        ]
-    },
-    {
-        "id": "f6b344e774e74bc3",
-        "type": "change",
-        "z": "f4a0cb11b396cc6d",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload.carbonfree",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 960,
-        "y": 520,
-        "wires": [
-            [
-                "2aaed87891c89cb3"
-            ]
-        ]
-    },
-    {
-        "id": "5d47dd41a91bf916",
-        "type": "ui_text",
-        "z": "f4a0cb11b396cc6d",
-        "group": "54a6a1a4d5f4c794",
-        "order": 5,
-        "width": "12",
-        "height": "2",
-        "name": "",
-        "label": "Notes:",
-        "format": "{{msg.payload}}",
-        "layout": "col-center",
-        "className": "",
-        "x": 430,
-        "y": 700,
-        "wires": []
-    },
-    {
-        "id": "6fac4ece1b08a28d",
-        "type": "change",
-        "z": "f4a0cb11b396cc6d",
-        "name": "Set notes",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "Renewables figure includes the percentage of the generation mix coming from Solar, Wind, and Hydro sources. The Low Carbon figure also includes the contribution of Nuclear power generation.",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 300,
-        "y": 700,
-        "wires": [
-            [
-                "5d47dd41a91bf916"
-            ]
-        ]
-    },
-    {
-        "id": "54a6a1a4d5f4c794",
-        "type": "ui_group",
-        "name": "Carbon Impact",
-        "tab": "f35e5a8b17c21ed3",
-        "order": 1,
-        "disp": true,
-        "width": "12",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "f35e5a8b17c21ed3",
-        "type": "ui_tab",
-        "name": "Home",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": true
     }
 ]
